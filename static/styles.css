@@ -1,0 +1,58 @@
+.red {
+    color: rgb(218, 73, 73);
+    font-size: x-large;
+}
+
+.red:hover {
+    color: rgb(180, 50, 50);
+}
+
+.main {
+    padding: 5%;
+    justify-content: left;
+}
+
+.title-main {
+    padding: 30px;
+}
+
+.contain {
+    justify-content: left;
+}
+
+.form-text-contain {
+    padding-left: 26%;
+    padding-right: 26%;
+}
+
+.form-text-contain-special {
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.form-text-contain-check {
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+.check:checked {
+    background-color: rgb(218, 73, 73);
+    border-color: rgb(180, 50, 50);
+}
+
+.card {
+    text-align: left;
+}
+
+.info-application {
+    text-align: left;
+}
+
+.info-card {
+    width: 288px;
+    height: 215.2px;
+}
+
+.p-description {
+    height: 72px;
+}

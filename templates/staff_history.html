@@ -1,0 +1,53 @@
+{% extends "staff_layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <h1>Approvals</h1>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-start">Application ID</th>
+                <th class="text-end">Approval ID</th>
+                <th class="text-end">Account ID</th>
+                <th class="text-end">Date Approved</th>
+            </tr>
+        </thead>
+       <tbody>
+            {% for history in history_approved %}
+                <tr>
+                    <td class="text-start">{{ history[0] }}</td>
+                    <td class="text-end">{{ history[1] }}</td>
+                    <td class="text-end">{{ history[2] }}</td>
+                    <td class="text-end">{{ history[3] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <h1>Denials</h1>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-start">Application ID</th>
+                <th class="text-end">Denial ID</th>
+                <th class="text-end">Account ID</th>
+                <th class="text-end">Date Approved</th>
+            </tr>
+        </thead>
+       <tbody>
+            {% for history in history_denied %}
+                <tr>
+                    <td class="text-start">{{ history[0] }}</td>
+                    <td class="text-end">{{ history[1] }}</td>
+                    <td class="text-end">{{ history[2] }}</td>
+                    <td class="text-end">{{ history[3] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

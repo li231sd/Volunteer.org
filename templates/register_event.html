@@ -1,0 +1,234 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Register Event
+{% endblock %}
+
+{% block main %}
+<form method="POST" action="/register-event">
+    {% if show == True %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Uh oh!</strong> {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+    <br>
+    <br>
+    <h1>Organizer Details</h1>
+    <br>
+    <br>
+    <div class="container text-center form-text-contain">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="name-organizer"
+                           placeholder="Your Name" type="text" required>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <input autocomplete="off" class="form-control mx-auto w-auto" name="email-organizer"
+                           placeholder="Your Email" type="email"
+                           required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-center form-text-contain">
+        <div class="row">
+
+            <div class="col-md-6">
+                <label for="city-organizer" class="form-label">City</label>
+                <input type="text" placeholder="Your address info" class="form-control" id="city-organizer" name="city-organizer"
+                       required>
+                <div class="invalid-feedback">
+                    Please provide a valid city.
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="state-organizer" class="form-label">State</label>
+                <select class="form-select" id="state-organizer" name="state-organizer" required>
+                    <option selected disabled value="">Choose...</option>
+                    {% for state in states_list %}
+                    <option value="{{ state }}">{{ state }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Please select a valid state.
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="zip-organizer" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="zip-organizer" name="zip-organizer" required>
+                <div class="invalid-feedback">
+                    Please provide a valid zip.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <h1>Organization/Activity Details</h1>
+    <p><strong>EVERYTHING BELOW WILL BE DISPLAYED</strong></p>
+    <br>
+    <br>
+    <div class="container text-center form-text-contain-special">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="organization-name"
+                           placeholder="Organization Name" type="text" required>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <input autocomplete="off" class="form-control mx-auto w-auto" name="organization-email"
+                           placeholder="Organization Email" type="email"
+                           required>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <input autocomplete="off" class="form-control mx-auto w-auto" name="activity-age" placeholder="Activity Age"
+                           type="number"
+                           min="12" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-center form-text-contain">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="activity-city" class="form-label">City</label>
+                <input type="text" placeholder="Activity address info" class="form-control" id="activity-city" name="activity-city"
+                       required>
+                <div class="invalid-feedback">
+                    Please provide a valid city.
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="activity-state" class="form-label">State</label>
+                <select class="form-select" id="activity-state" name="activity-state" required>
+                    <option selected disabled value="">Choose...</option>
+                    {% for state in states_list %}
+                    <option value="{{ state }}">{{ state }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">
+                    Please select a valid state.
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="activity-zip" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="activity-zip" name="activity-zip" required>
+                <div class="invalid-feedback">
+                    Please provide a valid zip.
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container text-center form-text-contain">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="max-people"
+                           placeholder="Activity max people" type="number" min="1" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <h1>Time Details</h1>
+    <br>
+    <br>
+    <div class="container text-center form-text-contain">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label" for="date-start">Start Date</label>
+                    <input autocomplete="off" id="date-start" class="form-control mx-auto w-auto" name="date-start"
+                           placeholder="Start Date" type="datetime-local"
+                           required>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label" for="date-end">End Date</label>
+                    <input autocomplete="off" id="date-end" class="form-control mx-auto w-auto" name="date-end"
+                           placeholder="End Date" type="datetime-local"
+                           required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container text-center form-text-contain">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label class="form-label" for="date-reg-deadline">Registration Deadline Date</label>
+                    <input autocomplete="off" id="date-reg-deadline" class="form-control mx-auto w-auto" name="date-reg-deadline"
+                           placeholder="Start Date" type="datetime-local"
+                           required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <h1>Activity Description</h1>
+    <br>
+    <br>
+    <div class="container text-center form-text-contain">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="activity-name"
+                           placeholder="Activity Name" type="text" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <textarea rows="5" cols="80" class="form-control mx-auto w-auto" name="description"
+                  placeholder="Description of Activity (Examples: Exact Location, Website, What You Will Do, Etc.). This can help get your application approved!" required></textarea>
+    </div>
+    <br>
+    <div class="container text-center form-text-contain-check">
+        <!--  Below text was modified to make more detailed by chatGPT but was not created by it -->
+        <div class="form-check text-start">
+            <label class="form-check-label">
+                By submitting this form, I confirm that:
+                <ul>
+                    <li>I am the official organizer of this activity.</li>
+                    <li>The information I have provided is complete and accurate to the best of my knowledge.</li>
+                    <li>I understand that this registration will be reviewed and may be rejected if found inaccurate.
+                    </li>
+                    <li>I am at least 14 years old.</li>
+                    <li>I have obtained all necessary permissions, permits, and insurance for this event (if
+                        applicable).
+                    </li>
+                    <li>I will comply with all relevant safety, legal, and organizational guidelines of volunteer.org
+                        and in my respective location.
+                    </li>
+                    <li>I accept responsibility for the conduct and safety of participants during the event.</li>
+                    <li><strong>IF NEEDED VOLUNTEER.ORG RESERVES THE RIGHT TO GIVE THIS INFORMATION TO RESPECTIVE LAW
+                        ENFORCEMENT</strong></li>
+                </ul>
+            </label>
+        </div>
+
+    </div>
+    <br>
+    <button class="btn btn-danger" type="submit">Send For Review</button>
+</form>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Find More
+{% endblock %}
+
+{% block main %}
+<div class="info-application">
+    <h1 class="card-subtitle mb-2 text">About Activity</h1>
+    <h6 class="card-subtitle mb-2 text-muted">Organization Details</h6>
+    <ul>
+        <li>Organization Name: {{ info[0][6] }}</li>
+        <li>Organization Email: {{ info[0][7] }}</li>
+    </ul>
+
+    <h6 class="card-subtitle mb-2 text-muted">Activity Details</h6>
+    <ul>
+        <li>Activity Name: {{ info[0][16] }}</li>
+        <li>Minimum Activity Age: {{ info[0][8] }}</li>
+        <li>Activity City: {{ info[0][9] }}</li>
+        <li>Activity State: {{ info[0][10] }}</li>
+        <li>Activity Zip: {{ info[0][11] }}</li>
+        <li>Max Participants: {{ info[0][12] }}</li>
+    </ul>
+
+    <h6 class="card-subtitle mb-2 text-muted">Date Details</h6>
+    <ul>
+        <li>Start Date: {{ info[0][13] }}C</li>
+        <li>End Date: {{ info[0][14] }}</li>
+        <li>Registration Deadline: {{ info[0][15] }}</li>
+    </ul>
+
+    <h6 class="card-subtitle mb-2 text-muted">About Activity & Extra Details</h6>
+    <ul>
+        <li><p class="card-text">{{ info[0][17] }}</p></li>
+    </ul>
+    <br>
+    <p><strong>By registering if you so choose you are obligated to attend this here event or notify the organizer
+        directly about any conflicts.</strong></p>
+    <a onclick="showConfirm()" class="btn btn-success">Register</a>
+    <a href="/" class="btn btn-danger">Back</a>
+    <div id="register" class="mt-2 d-none">
+        <br>
+        <p>Do you want to <strong>register</strong> to this event?</p>
+        <a href="#" onclick="registerUserEvent('{{ info[0][0] }}')" class="btn btn-success">Yes</a>
+        <a onclick="closeConfirm()" class="btn btn-danger">No</a>
+    </div>
+</div>
+<script>
+    function showConfirm() {
+        document.getElementById("register").classList.remove("d-none");
+    }
+
+    function closeConfirm() {
+        document.getElementById("register").classList.add("d-none");
+    }
+
+    function registerUserEvent(id) {
+        fetch("/rsvp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "id": id })
+        })
+        .then(response => {
+           if (response.ok) {
+               alert("Successfully Registered");
+               window.location.href = "/";
+           }
+           else {
+              alert("Something went wrong!");
+              location.reload();
+           }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "staff_layout.html" %}
+
+{% block title %}
+    Staff Login | Secured
+{% endblock %}
+
+{% block main %}
+    {% if show == True %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Uh oh!</strong> {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <h1 class="title-main">Staff Login</h1>
+    <form id="staff-login-form" action="/staff-login-secured" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password" required>
+        </div>
+        <button class="btn btn-danger" type="submit">Log In</button>
+    </form>
+{% endblock %}
