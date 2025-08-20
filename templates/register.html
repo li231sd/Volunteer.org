@@ -1,40 +1,93 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block title %} Register {% endblock %} {% block
+main %} {% if show == True %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Uh oh!</strong> {{ message }}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endif %}
 
-{% block title %}
-    Register
-{% endblock %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow border">
+      <div class="card-body p-4">
+        <h1 class="title-main mb-4">Register</h1>
+        <form action="/register" method="post">
+          <div class="mb-3">
+            <input
+              autocomplete="off"
+              autofocus
+              class="form-control"
+              name="legal-name"
+              placeholder="Legal Name"
+              type="text"
+              required
+            />
+          </div>
 
-{% block main %}
-    {% if show == True %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-          <strong>Uh oh!</strong> {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <div class="mb-3">
+            <input
+              autocomplete="off"
+              class="form-control"
+              name="email"
+              placeholder="Email"
+              type="email"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <input
+              autocomplete="off"
+              class="form-control"
+              name="age"
+              placeholder="Age"
+              type="number"
+              min="12"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <input
+              autocomplete="off"
+              class="form-control"
+              name="username"
+              placeholder="Username"
+              type="text"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <input
+              class="form-control"
+              name="password"
+              placeholder="Password"
+              type="password"
+              required
+            />
+          </div>
+
+          <button class="btn btn-danger w-100" type="submit">Register</button>
+        </form>
+        <div class="text-center mt-3">
+          <small class="text-muted"
+            >Already have an account?
+            <a
+              href="/login"
+              class="text-decoration-none"
+              style="color: rgb(218, 73, 73)"
+              >Login here</a
+            ></small
+          >
         </div>
-    {% endif %}
-
-    <h1 class="title-main">Register</h1>
-
-    <form action="/register" method="post">
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="legal-name" placeholder="Legal Name" type="text" required>
-        </div>
-
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" name="email" placeholder="Email" type="email" required>
-        </div>
-
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" name="age" placeholder="Age" type="number" min="12" required>
-        </div>
-
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text" required>
-        </div>
-
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password" required>
-        </div>
-
-        <button class="btn btn-danger" type="submit">Register</button>
-    </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

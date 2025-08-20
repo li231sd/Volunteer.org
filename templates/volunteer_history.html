@@ -1,57 +1,71 @@
 {% extends "layout.html" %}
 
-{% block title %}
-    Volunteer History
-{% endblock %}
+{% block title %} Volunteer History {% endblock %}
 
 {% block main %}
-    <h1>Attended Events</h1>
-    <br>
-    <table class="table">
-        <thead>
+<div class="container my-4">
+
+  <!-- Attended Events -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Attended Events</h4>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-light">
             <tr>
-                <th class="text-start">Event ID</th>
-                <th class="text-end">Organization Name</th>
-                <th class="text-end">Start Date/Time</th>
-                <th class="text-end">End Date/Time<th>
+              <th class="text-start">Event ID</th>
+              <th class="text-end">Organization Name</th>
+              <th class="text-end">Start Date/Time</th>
+              <th class="text-end">End Date/Time</th>
             </tr>
-        </thead>
-       <tbody>
+          </thead>
+          <tbody>
             {% for history in events_attended %}
-                <tr>
-                    <td class="text-start">{{ history[0] }}</td>
-                    <td class="text-end">{{ history[1] }}</td>
-                    <td class="text-end">{{ history[2] }}</td>
-                    <td class="text-end">{{ history[3] }}</td>
-                </tr>
+              <tr>
+                <td class="text-start">{{ history[0] }}</td>
+                <td class="text-end">{{ history[1] }}</td>
+                <td class="text-end">{{ history[2] }}</td>
+                <td class="text-end">{{ history[3] }}</td>
+              </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <br>
-    <h1>Hosted Events</h1>
-    <br>
-    <table class="table">
-        <thead>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hosted Events -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Hosted Events</h4>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-light">
             <tr>
-                <th class="text-start">Application ID</th>
-                <th class="text-end">Approval ID</th>
-                <th class="text-end">Application Name</th>
-                <th class="text-end">Date Approved</th>
-                <th class="text-end">Start Date/Time</th>
-                <th class="text-end">End Date/Time</th>
+              <th class="text-start">Application ID</th>
+              <th class="text-end">Approval ID</th>
+              <th class="text-end">Application Name</th>
+              <th class="text-end">Date Approved</th>
+              <th class="text-end">Start Date/Time</th>
+              <th class="text-end">End Date/Time</th>
             </tr>
-        </thead>
-       <tbody>
+          </thead>
+          <tbody>
             {% for history in events_hosted %}
-                <tr>
-                    <td class="text-start">{{ history[0] }}</td>
-                    <td class="text-end">{{ history[1] }}</td>
-                    <td class="text-end">{{ history[2] }}</td>
-                    <td class="text-end">{{ history[3] }}</td>
-                    <td class="text-end">{{ history[4] }}</td>
-                    <td class="text-end">{{ history[5] }}</td>
-                </tr>
+              <tr>
+                <td class="text-start">{{ history[0] }}</td>
+                <td class="text-end">{{ history[1] }}</td>
+                <td class="text-end">{{ history[2] }}</td>
+                <td class="text-end">{{ history[3] }}</td>
+                <td class="text-end">{{ history[4] }}</td>
+                <td class="text-end">{{ history[5] }}</td>
+              </tr>
             {% endfor %}
-        </tbody>
-    </table>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}
