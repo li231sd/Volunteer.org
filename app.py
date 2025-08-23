@@ -97,7 +97,7 @@ def rsvp():
         db.execute("INSERT INTO rsvp (application_id, user_id) VALUES (?, ?)", (application_id, session["user_id"]))
 
         sender_email = "donotreply.volunteer.org@gmail.com"
-        app_password = "oqek ztdx cvdh vxhw" 
+        app_password = "--- --- ---" 
 
         to_email = db.execute("SELECT email FROM users WHERE id = ?", (session["user_id"],)).fetchone()[0]
 
