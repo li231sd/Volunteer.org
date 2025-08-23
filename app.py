@@ -1,7 +1,12 @@
+from crypt import methods
 from datetime import datetime
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
+
+
+import smtplib
+from email.mime.text import MIMEText
 
 import re
 import sqlite3
@@ -21,7 +26,6 @@ states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI"
           "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
           "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
 
-
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -38,7 +42,10 @@ def index():
 
     options = []
 
-    approved_applications = db.execute("SELECT * FROM application_for_review WHERE id IN (SELECT application_id FROM applications_approved)").fetchall()
+    now = datetime.now()
+    formatted_date = now.strftime("%Y-%m-%dT%H:%M")
+
+    approved_applications = db.execute("SELECT * FROM application_for_review WHERE id IN (SELECT application_id FROM applications_approved) AND date_reg_deadline > ?", (formatted_date,)).fetchall()
 
     for application in approved_applications:
         options.append([
@@ -88,6 +95,53 @@ def rsvp():
             return jsonify({"response": "Something went wrong!"}), 401
 
         db.execute("INSERT INTO rsvp (application_id, user_id) VALUES (?, ?)", (application_id, session["user_id"]))
+
+        sender_email = "donotreply.volunteer.org@gmail.com"
+        app_password = "oqek ztdx cvdh vxhw" 
+
+        to_email = db.execute("SELECT email FROM users WHERE id = ?", (session["user_id"],)).fetchone()[0]
+
+        msg = MIMEText(f"Thanks for RSVPing to event #{application_id}! We will see you there!")
+        msg["Subject"] = "RSVP Confirmation"
+        msg["From"] = sender_email
+        msg["To"] = to_email
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, app_password)
+            server.sendmail(sender_email, to_email, msg.as_string())
+
+
+        organizer_email = db.execute("SELECT email FROM users WHERE id = ?", (who_own_event[0][18],)).fetchone()[0]
+        username = db.execute("SELECT username FROM users WHERE id = ?", (session["user_id"],)).fetchone()[0]
+
+        msg = MIMEText(
+            f"""
+            Hello,
+
+            User **{username}** has registered for **Event #{application_id}**.
+
+            You can review their information on the website. As the organizer, you may:
+            - Approve or deny their registration
+            - Provide them with additional details through the website or by email
+
+            Please log in to the website to manage this registration.
+
+            Thank you,
+            The Volunteer.org Team
+            """,
+            "plain"
+        )
+
+        msg["Subject"] = "RSVP Confirmation"
+        msg["From"] = sender_email
+        msg["To"] = organizer_email
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, app_password)
+            server.sendmail(sender_email, organizer_email, msg.as_string())
+
         return jsonify({"success": True})
 
     return jsonify({"response": "Something went wrong!"}), 401
@@ -115,6 +169,41 @@ def login():
     else:
         return render_template("login.html", message="If you can see this that means I did something wrong!",
                                show=False)
+
+@app.route("/my_events", methods=["GET"])
+def my_event():
+    if "user_id" not in session:
+        return redirect("/login")
+    
+    now = datetime.now()
+    formatted_date = now.strftime("%Y-%m-%dT%H:%M")
+    
+    events_hosted = db.execute("SELECT * FROM application_for_review WHERE account_id = ? AND id IN (SELECT application_id FROM applications_approved) AND date_start > ?", (session["user_id"],formatted_date,)).fetchall()
+    
+    events_attendees = []
+    for event in events_hosted:
+        attendees = db.execute("SELECT * FROM users WHERE id IN (SELECT user_id FROM rsvp WHERE application_id = ?)", (event[0],))
+        for attendee in attendees:
+            events_attendees.append(
+                [
+                    event[0],
+                    attendee
+                ]
+            )
+
+    return render_template("my_event.html", events_hosted=events_hosted, events_attendees=events_attendees)
+
+@app.route("/del_event_secure", methods=["POST"])
+def del_event_secure():
+    if "user_id" not in session:
+        return redirect("/login")
+    
+    if request.method == "POST":
+        data = request.get_json()
+        application_id = int(data.get("id"))
+        
+    else:
+        return redirect("/")
 
 @app.route("/volunteer_history", methods=["GET"])
 def volunteer_history():
