@@ -4,6 +4,16 @@
   <div class="container text-center">
     <h1 class="title-main mb-5">Welcome to Volunteer.org</h1>
     <div class="row g-4">
+      {% if options|length == 0 %}
+      <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+          No opportunities available at the moment. Please check back later.
+        </div>
+        <p class="lead text-muted">However, you can start one!</p>
+          <a href="/register-event" class="btn btn-danger">Host an Event</a>
+      </div>
+      {% endif %}
+
       {% for option in options %}
       <div class="col-md-6 col-lg-4">
         <div class="card info-card shadow border h-100" style="width: 18rem">

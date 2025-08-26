@@ -1,5 +1,6 @@
 from crypt import methods
 from datetime import datetime
+from math import e
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -97,7 +98,7 @@ def rsvp():
         db.execute("INSERT INTO rsvp (application_id, user_id) VALUES (?, ?)", (application_id, session["user_id"]))
 
         sender_email = "donotreply.volunteer.org@gmail.com"
-        app_password = "--- --- ---" 
+        app_password = "oqek ztdx cvdh vxhw" 
 
         to_email = db.execute("SELECT email FROM users WHERE id = ?", (session["user_id"],)).fetchone()[0]
 
@@ -201,7 +202,54 @@ def del_event_secure():
     if request.method == "POST":
         data = request.get_json()
         application_id = int(data.get("id"))
+
+        if not application_id:
+            return redirect("/")
+
+        event_bg_check = db.execute("SELECT id FROM application_for_review WHERE id = ? AND account_id = ?", (application_id, session["user_id"],))
+
+        if not event_bg_check:
+            return jsonify({"response": "Can't preform action!"}), 401
+
+        sender_email = "donotreply.volunteer.org@gmail.com"
+        app_password = "oqek ztdx cvdh vxhw" 
+
+        to_email = []
         
+        rsvp_people = db.execute("SELECT email FROM users WHERE id IN (SELECT user_id FROM rsvp WHERE application_id = ?)", (application_id,)).fetchall()
+
+        for person in rsvp_people:
+            to_email.append(person[0])
+
+        msg_template = """
+        Hello,
+
+        Event #{application_id} has been canceled.
+
+        On behalf of the organizer we apologize for any inconvenience this may cause. 
+        If you have any questions, please contact the event organizer.
+
+        Thank you,
+        The Volunteer.org Team
+        SAFETY IS OUR FIRST PRIORITY!
+        
+        """
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, app_password)
+            for recipient in to_email:
+                msg = MIMEText(msg_template.format(application_id=application_id), "plain")
+                msg["Subject"] = f"Event #{application_id} Cancelled"
+                msg["From"] = sender_email
+                msg["To"] = recipient
+                server.sendmail(sender_email, recipient, msg.as_string())
+        
+        db.execute("DELETE FROM rsvp WHERE application_id = ?", (application_id,)) 
+        db.execute("DELETE FROM applications_approved WHERE application_id = ?", (application_id,)) 
+        db.execute("DELETE FROM application_for_review WHERE id = ?", (application_id,))
+       
+        return jsonify({"success": True})
     else:
         return redirect("/")
 
