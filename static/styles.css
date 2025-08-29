@@ -151,3 +151,33 @@ input:focus, select:focus, textarea:focus {
 .p-description {
     height: 72px;
 }
+
+.modal button, 
+.modal .btn,
+button[data-bs-toggle="modal"],
+.btn[data-bs-toggle="modal"] {
+    transform: none !important;
+}
+
+.modal button:hover, 
+.modal .btn:hover,
+button[data-bs-toggle="modal"]:hover,
+.btn[data-bs-toggle="modal"]:hover {
+    transform: none !important;
+}
+
+.modal button:active, 
+.modal .btn:active,
+button[data-bs-toggle="modal"]:active,
+.btn[data-bs-toggle="modal"]:active {
+    transform: none !important;
+}
+
+/* Fix for modal backdrop issues */
+.modal-backdrop {
+    visibility: hidden;
+}
+
+.modal {
+    z-index: 1050;
+}
