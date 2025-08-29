@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, render_template, request, session, redirect, jsonify
 from werkzeug.security import check_password_hash
-from db import execute_query, fetchall, fetchone
+from db import db
 
 staff_bp = Blueprint('staff', __name__)
 
@@ -16,7 +16,7 @@ def staff_login_secured():
         if not username or not password:
             return render_template("staff_login.html", message="One or more fields were left blank!", show=True)
 
-        rows = fetchall("SELECT * FROM staff WHERE username = ?", (username,))
+        rows = db.execute("SELECT * FROM staff WHERE username = ?", (username,)).fetchall()
         if not rows:
             return render_template("staff_login.html", message="We can't find you!", show=True)
 
@@ -27,7 +27,7 @@ def staff_login_secured():
         return redirect("/review_applications")
 
     else:
-        return render_template("staff_login.html", message="You should not be able to see this!", show=False)
+        return render_template("staff_login.html", message="You should not be able to see this!", show=False,)
 
 @staff_bp.route("/logout-staff", methods=["GET"])
 def staff_logout():
@@ -48,59 +48,50 @@ def review_applications():
         formatted_date = now.strftime("%Y-%m-%dT%H:%M")
 
         if int(approved) == 1:
-            execute_query(
-                "INSERT INTO applications_approved (application_id, staff_id, date) VALUES (?, ?, ?)", 
-                (application_id, session["staff_id"], formatted_date)
-            )
+            db.execute("INSERT INTO applications_approved (application_id, staff_id, date) VALUES (?, ?, ?)", (application_id, session["staff_id"], formatted_date))
             return jsonify({"success": True})
         else:
-            execute_query(
-                "INSERT INTO applications_denied (application_id, staff_id, date) VALUES (?, ?, ?)", 
-                (application_id, session["staff_id"], formatted_date)
-            )
+            db.execute("INSERT INTO applications_denied (application_id, staff_id, date) VALUES (?, ?, ?)", (application_id, session["staff_id"], formatted_date))
             return jsonify({"success": True})
 
     else:
         show_no_reviews = False
-        rows = fetchall(
-            """SELECT * FROM application_for_review 
-            WHERE id NOT IN (SELECT application_id FROM applications_approved) 
-            AND id NOT IN (SELECT application_id FROM applications_denied)"""
-        )
+        rows = db.execute("SELECT * FROM application_for_review WHERE id NOT IN (SELECT application_id FROM applications_approved) AND id NOT IN (SELECT application_id FROM applications_denied)").fetchall()
         if len(rows) == 0:
             show_no_reviews = True
-        return render_template("review_applications.html", message="You should not be able to see this!", 
-                               show=False, rows=rows, show_no_reviews=show_no_reviews)
+        return render_template("review_applications.html", message="You should not be able to see this!", show=False, rows=rows, show_no_reviews=show_no_reviews)
 
 @staff_bp.route("/review_self", methods=["GET"])
 def review_self():
     if "staff_id" not in session:
         return redirect("/staff-login-secured")
 
-    # Get approved applications history
     history_approved = []
-    rows_approved = fetchall("SELECT * FROM applications_approved WHERE staff_id = ?", (session["staff_id"],))
+    rows_approved = db.execute("SELECT * FROM applications_approved WHERE staff_id = ?", (session["staff_id"],)).fetchall()
     for row in rows_approved:
-        application = fetchall("SELECT * FROM application_for_review WHERE id = ?", (row[0],))
+        application = db.execute("SELECT * FROM application_for_review WHERE id = ?", (row[0],)).fetchall()
         if application:
-            history_approved.append([
-                row[1],    # staff_id
-                row[0],    # application_id
-                application[0][18],  # account_id
-                row[3]     # date
-            ])
+            history_approved.append(
+                [
+                    row[1],
+                    row[0],
+                    application[0][18],
+                    row[3]
+                ]
+            )
 
-    # Get denied applications history
     history_denied = []
-    rows_denied = fetchall("SELECT * FROM applications_denied WHERE staff_id = ?", (session["staff_id"],))
+    rows_denied = db.execute("SELECT * FROM applications_denied WHERE staff_id = ?", (session["staff_id"],)).fetchall()
     for row in rows_denied:
-        application = fetchall("SELECT * FROM application_for_review WHERE id = ?", (row[0],))
+        application = db.execute("SELECT * FROM application_for_review WHERE id = ?", (row[0],)).fetchall()
         if application:
-            history_denied.append([
-                row[1],    # staff_id
-                row[0],    # application_id
-                application[0][18],  # account_id
-                row[3]     # date
-            ])
+            history_denied.append(
+                [
+                    row[1],
+                    row[0],
+                    application[0][18],
+                    row[3]
+                ]
+            )
 
     return render_template("staff_history.html", history_approved=history_approved, history_denied=history_denied)

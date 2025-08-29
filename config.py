@@ -1,3 +1,5 @@
+import os
+
 class Config:
     # Flask-Session configuration
     SESSION_PERMANENT = False
@@ -6,8 +8,8 @@ class Config:
     # Email configuration
     SMTP_SERVER = "smtp.gmail.com"
     SMTP_PORT = 587
-    EMAIL_SENDER = "donotreply.volunteer.org@gmail.com"
-    EMAIL_PASSWORD = "oqek ztdx cvdh vxhw"  # Note: In production, use environment variables
+    EMAIL_SENDER = os.getenv('EMAIL_SENDER', "donotreply.volunteer.org@gmail.com")
+    EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD', "oqek ztdx cvdh vxhw")  # Fallback for development
     
     # Database configuration
     DATABASE_PATH = 'volunteer.db'

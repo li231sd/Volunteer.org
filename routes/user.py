@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, render_template, session, redirect
-from db import fetchall
+from db import db
 
 user_bp = Blueprint('user', __name__)
 
@@ -12,27 +12,18 @@ def my_event():
     now = datetime.now()
     formatted_date = now.strftime("%Y-%m-%dT%H:%M")
     
-    # Get events hosted by the user
-    events_hosted = fetchall(
-        """SELECT * FROM application_for_review 
-        WHERE account_id = ? 
-        AND id IN (SELECT application_id FROM applications_approved) 
-        AND date_start > ?""", 
-        (session["user_id"], formatted_date)
-    )
+    events_hosted = db.execute("SELECT * FROM application_for_review WHERE account_id = ? AND id IN (SELECT application_id FROM applications_approved) AND date_start > ?", (session["user_id"],formatted_date,)).fetchall()
     
-    # Get attendees for each hosted event
     events_attendees = []
     for event in events_hosted:
-        attendees = fetchall(
-            "SELECT * FROM users WHERE id IN (SELECT user_id FROM rsvp WHERE application_id = ?)", 
-            (event[0],)
-        )
+        attendees = db.execute("SELECT * FROM users WHERE id IN (SELECT user_id FROM rsvp WHERE application_id = ?)", (event[0],))
         for attendee in attendees:
-            events_attendees.append([
-                event[0],    # event id
-                attendee     # attendee info
-            ])
+            events_attendees.append(
+                [
+                    event[0],
+                    attendee
+                ]
+            )
 
     return render_template("my_event.html", events_hosted=events_hosted, events_attendees=events_attendees)
 
@@ -41,41 +32,36 @@ def volunteer_history():
     if "user_id" not in session:
         return redirect("/login")
 
-    # Get events the user attended
-    attended_events = fetchall("SELECT * FROM rsvp WHERE user_id = ?", (session["user_id"],))
-    
-    # Get events the user hosted
-    hosted_events = fetchall(
-        """SELECT * FROM application_for_review 
-        WHERE account_id = ? 
-        AND id IN (SELECT application_id FROM applications_approved)""", 
-        (session["user_id"],)
-    )
+    attended_events = db.execute("SELECT * FROM rsvp WHERE user_id = ?", (session["user_id"],)).fetchall()
+    hosted_events = db.execute("SELECT * FROM application_for_review WHERE account_id = ? AND id IN (SELECT application_id FROM applications_approved)", (session["user_id"],)).fetchall()
 
     events_attended = []
     events_hosted = []
 
-    # Process attended events
     for event in attended_events:
-        rows = fetchall("SELECT * FROM application_for_review WHERE id = ?", (event[1],))
+        rows = db.execute("SELECT * FROM application_for_review WHERE id = ?", (event[1],)).fetchone()
         if rows:
-            events_attended.append([
-                event[1],      # application_id
-                rows[0][6],    # organization_name
-                rows[0][13],   # date_start
-                rows[0][14]    # date_end
-            ])
+            events_attended.append(
+                [
+                    event[1],
+                    rows[6],
+                    rows[13],
+                    rows[14]
+                ]
+            )
 
-    # Process hosted events
     for event in hosted_events:
-        rows = fetchall("SELECT * FROM applications_approved WHERE application_id = ?", (event[0],))
-        events_hosted.append([
-            event[0],      # application_id
-            rows[0][0],    # approval_id
-            event[16],     # activity_name
-            rows[0][3],    # approval_date
-            event[13],     # date_start
-            event[14]      # date_end
-        ])
+        rows = db.execute("SELECT * FROM applications_approved WHERE application_id = ?", (event[0],)).fetchall()
+
+        events_hosted.append(
+            [
+                event[0],
+                rows[0][0],
+                event[16],
+                rows[0][3],
+                event[13],
+                event[14]
+            ]
+        )
 
     return render_template("volunteer_history.html", events_attended=events_attended, events_hosted=events_hosted)

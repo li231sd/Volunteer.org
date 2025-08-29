@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
-from db import execute_query, fetchall
+from db import db
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -15,7 +15,7 @@ def login():
         if not username or not password:
             return render_template("login.html", message="One or more fields were left blank!", show=True)
 
-        rows = fetchall("SELECT * FROM users WHERE username = ?", (username,))
+        rows = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall()
         if not rows:
             return render_template("login.html", message="We can't find you!", show=True)
 
@@ -55,16 +55,17 @@ def register():
             return render_template("register.html", message="Age must be a number!", show=True)
 
         # Make sure there is nobody with the same username
-        usernames = fetchall("SELECT username FROM users WHERE username = ?", (username,))
+        usernames = db.execute("SELECT username FROM users WHERE username = ?", (username,)).fetchall()
         if len(usernames) != 0:
             return render_template("register.html", message="Username already taken!", show=True)
 
-        execute_query(
+        db.execute(
             "INSERT INTO users ('name', 'email', 'age', 'username', 'password') VALUES (?, ?, ?, ?, ?)",
             (name, email, age, username, generate_password_hash(password))
         )
 
-        id_finder = fetchall("SELECT id FROM users WHERE username = ?", (username,))
+        id_finder = db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchall()
+
         session["user_id"] = id_finder[0][0]
 
         return redirect("/")
