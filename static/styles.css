@@ -1,3 +1,95 @@
+html, body {
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body {
+    flex: 1 0 auto;
+}
+
+main {
+    flex: 1 0 auto;
+    height: 70%;
+}
+footer {
+    flex-shrink: 0;
+}
+
+/* --- Animations and Transitions --- */
+
+/* Fade-in animation for page and sections */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-in forwards;
+}
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Slide-up animation for cards and modals */
+.slide-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Button hover and active animations */
+button, .btn {
+    transition: background 0.3s, color 0.3s, transform 0.2s, box-shadow 0.2s;
+    will-change: transform, box-shadow;
+}
+button:hover, .btn:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+button:active, .btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+/* Animated form fields */
+input, select, textarea {
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px #007bff33;
+}
+
+/* Card hover effect */
+.card, .event-card, .volunteer-card {
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+.card:hover, .event-card:hover, .volunteer-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    transform: translateY(-4px) scale(1.02);
+}
+
+/* Navbar animation */
+.navbar {
+    transition: background 0.4s, box-shadow 0.4s;
+}
+.navbar.scrolled {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Utility: delay for staggered animations */
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+.delay-4 { animation-delay: 0.8s; }
 .red {
     color: rgb(218, 73, 73);
     font-size: x-large;

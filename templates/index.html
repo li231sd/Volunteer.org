@@ -1,6 +1,7 @@
 {% extends "layout.html" %} {% block title %} Home {% endblock %} {% block main
 %}
-<div class="contain">
+<body class="fade-in">
+<main class="slide-up">
   <div class="container text-center">
     <h1 class="title-main mb-5">Welcome to Volunteer.org</h1>
     <div class="row g-4">
@@ -10,7 +11,8 @@
           No opportunities available at the moment. Please check back later.
         </div>
         <p class="lead text-muted">However, you can start one!</p>
-          <a href="/register-event" class="btn btn-danger">Host an Event</a>
+        <a href="/register-event" class="btn btn-danger">Host an Event</a>
+        <br>
       </div>
       {% endif %}
 

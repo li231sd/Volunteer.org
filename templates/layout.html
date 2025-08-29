@@ -22,7 +22,7 @@
 
     <title>{% block title %}{% endblock %}</title>
   </head>
-  <body>
+  <body class="fade-in">
     <nav class="bg-light border navbar navbar-expand-md navbar-light">
       <div class="container-fluid">
         <!-- The Brand Classes Source: ChatGPT -->
@@ -36,14 +36,24 @@
           data-bs-target="#navbar"
           data-bs-toggle="collapse"
           type="button"
-        ><span class="navbar-toggler-icon"></span></button>
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbar">
           {% if session["user_id"] %}
           <ul class="navbar-nav me-auto mt-2">
-            <li class="nav-item"><a class="nav-link" href="/register-event">Register Event</a></li>
-            <li class="nav-item"><a class="nav-link" href="/volunteer_history">Volunteer History</a></li>
-            <li class="nav-item"><a class="nav-link" href="/my_events">My Events</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register-event">Register Event</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/volunteer_history"
+                >Volunteer History</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/my_events">My Events</a>
+            </li>
           </ul>
           <ul class="navbar-nav ms-auto mt-2">
             <li class="nav-item">
@@ -64,16 +74,15 @@
       </div>
     </nav>
 
-    <main class="container py-5 text-center">
-        {% block main %}
-        {% endblock %}
+    <main class="container py-5 text-center slide-up">
+      {% block main %} {% endblock %}
     </main>
 
-    <footer class="text-center ">
-        © 2025 volunteer.org
-        <br>
-        <strong>Your safety is our priority.</strong>
+    <footer class="text-center">
+      © 2025 volunteer.org
+      <br />
+      <strong>Your safety is our priority.</strong>
     </footer>
-    <br>
+    <br />
   </body>
 </html>

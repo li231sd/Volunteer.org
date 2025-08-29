@@ -1,156 +1,164 @@
-{% extends "staff_layout.html" %}
-
-{% block title %}
-Review Applications | Secured
-{% endblock %}
-
-{% block main %}
-{% if show == True %}
+{% extends "staff_layout.html" %} {% block title %} Review Applications |
+Secured {% endblock %} {% block main %} {% if show == True %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>Uh oh!</strong> {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <strong>Uh oh!</strong> {{ message }}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
 </div>
 {% endif %}
 
 <h1>Comprehensive Application Review</h1>
 
 {% if show_no_reviews %}
-    <br>
-    <h6>No applications in need of approval 🎉</h6>
-{% endif %}
+<br />
+<h6>No applications in need of approval 🎉</h6>
+{% endif %} {% for row in rows %}
+<br />
+<div class="card slide-up">
+  <div class="card-header">
+    Application id: {{ row[0] }} | Registration Deadline: {{ row[15] }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ row[16] }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Account Details</h6>
+    <ul>
+      <li>ID: {{ row[18] }}</li>
+      <li>Name: {{ row[19] }}</li>
+      <li>Email: {{ row[20] }}</li>
+      <li>Age: {{ row[21] }}</li>
+      <li>Username: {{ row[22] }}</li>
+    </ul>
 
-{% for row in rows %}
-<br>
-<div class="card">
-    <div class="card-header">
-        Application id: {{ row[0] }} | Registration Deadline: {{ row[15] }}
+    <h6 class="card-subtitle mb-2 text-muted">Organizer Details</h6>
+    <ul>
+      <li>Organizer Name: {{ row[1] }}</li>
+      <li>Organizer Email: {{ row[2] }}</li>
+      <li>Organizer City: {{ row[3] }}</li>
+      <li>Organizer State: {{ row[4] }}</li>
+      <li>Organizer Zip: {{ row[5] }}</li>
+    </ul>
+
+    <h6 class="card-subtitle mb-2 text-muted">Organization Details</h6>
+    <ul>
+      <li>Organization Name: {{ row[6] }}</li>
+      <li>Organization Email: {{ row[7] }}</li>
+    </ul>
+
+    <h6 class="card-subtitle mb-2 text-muted">Activity Details</h6>
+    <ul>
+      <li>Activity Name: {{ row[16] }}</li>
+      <li>Minimum Activity Age: {{ row[8] }}</li>
+      <li>Activity City: {{ row[9] }}</li>
+      <li>Activity State: {{ row[10] }}</li>
+      <li>Activity Zip: {{ row[11] }}</li>
+      <li>Max Participants: {{ row[12] }}</li>
+    </ul>
+
+    <h6 class="card-subtitle mb-2 text-muted">Date Details</h6>
+    <ul>
+      <li>Start Date: {{ row[13] }}C</li>
+      <li>End Date: {{ row[14] }}</li>
+      <li>Registration Deadline: {{ row[15] }}</li>
+    </ul>
+
+    <h6 class="card-subtitle mb-2 text-muted">
+      About Activity & Extra Details
+    </h6>
+    <ul>
+      <li><p class="card-text">{{ row[17] }}</p></li>
+    </ul>
+
+    <a class="btn btn-danger" onclick="showConfirmDeny('{{ row[0] }}')">Deny</a>
+    <a class="btn btn-success" onclick="showConfirmApprove('{{ row[0] }}')"
+      >Approve</a
+    >
+
+    <div id="approve{{ row[0] }}" class="mt-2 d-none">
+      <br />
+      <p><strong>APPROVE</strong> this application with your full consent?</p>
+      <a onclick="closeConfirmApprove('{{ row[0] }}')" class="btn btn-danger"
+        >No</a
+      >
+      <a
+        href="#"
+        onclick="approveApplicationPOST('{{ row[0] }}')"
+        class="btn btn-success"
+        >Yes</a
+      >
     </div>
-    <div class="card-body">
-        <h5 class="card-title">{{ row[16] }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Account Details</h6>
-        <ul>
-            <li>ID: {{ row[18] }}</li>
-            <li>Name: {{ row[19] }}</li>
-            <li>Email: {{ row[20] }}</li>
-            <li>Age: {{ row[21] }}</li>
-            <li>Username: {{ row[22] }}</li>
-        </ul>
 
-        <h6 class="card-subtitle mb-2 text-muted">Organizer Details</h6>
-        <ul>
-            <li>Organizer Name: {{ row[1] }}</li>
-            <li>Organizer Email: {{ row[2] }}</li>
-            <li>Organizer City: {{ row[3] }}</li>
-            <li>Organizer State: {{ row[4] }}</li>
-            <li>Organizer Zip: {{ row[5] }}</li>
-        </ul>
-
-        <h6 class="card-subtitle mb-2 text-muted">Organization Details</h6>
-        <ul>
-            <li>Organization Name: {{ row[6] }}</li>
-            <li>Organization Email: {{ row[7] }}</li>
-        </ul>
-
-        <h6 class="card-subtitle mb-2 text-muted">Activity Details</h6>
-        <ul>
-            <li>Activity Name: {{ row[16] }}</li>
-            <li>Minimum Activity Age: {{ row[8] }}</li>
-            <li>Activity City: {{ row[9] }}</li>
-            <li>Activity State: {{ row[10] }}</li>
-            <li>Activity Zip: {{ row[11] }}</li>
-            <li>Max Participants: {{ row[12] }}</li>
-        </ul>
-
-        <h6 class="card-subtitle mb-2 text-muted">Date Details</h6>
-        <ul>
-            <li>Start Date: {{ row[13] }}C</li>
-            <li>End Date: {{ row[14] }}</li>
-            <li>Registration Deadline: {{ row[15] }}</li>
-        </ul>
-
-        <h6 class="card-subtitle mb-2 text-muted">About Activity & Extra Details</h6>
-        <ul>
-            <li><p class="card-text">{{ row[17] }}</p></li>
-        </ul>
-
-        <a class="btn btn-danger" onclick="showConfirmDeny('{{ row[0] }}')">Deny</a>
-        <a class="btn btn-success" onclick="showConfirmApprove('{{ row[0] }}')">Approve</a>
-
-        <div id="approve{{ row[0] }}" class="mt-2 d-none">
-            <br>
-            <p><strong>APPROVE</strong> this application with your full consent?</p>
-            <a onclick="closeConfirmApprove('{{ row[0] }}')" class="btn btn-danger">No</a>
-            <a href="#" onclick="approveApplicationPOST('{{ row[0] }}')" class="btn btn-success">Yes</a>
-        </div>
-
-        <div id="deny{{ row[0] }}" class="mt-2 d-none">
-            <br>
-            <p><strong>DENY</strong> this application with your full consent?</p>
-            <a onclick="closeConfirmDeny('{{ row[0] }}')" class="btn btn-danger">No</a>
-            <a onclick="denyApplicationPOST('{{ row[0] }}')" class="btn btn-success">Yes</a>
-        </div>
+    <div id="deny{{ row[0] }}" class="mt-2 d-none">
+      <br />
+      <p><strong>DENY</strong> this application with your full consent?</p>
+      <a onclick="closeConfirmDeny('{{ row[0] }}')" class="btn btn-danger"
+        >No</a
+      >
+      <a onclick="denyApplicationPOST('{{ row[0] }}')" class="btn btn-success"
+        >Yes</a
+      >
     </div>
+  </div>
 </div>
 {% endfor %}
 
 <script>
-    function showConfirmDeny(id) {
-        document.getElementById("approve" + id).classList.add("d-none");
-        document.getElementById("deny" + id).classList.remove("d-none");
-    }
+  function showConfirmDeny(id) {
+    document.getElementById("approve" + id).classList.add("d-none");
+    document.getElementById("deny" + id).classList.remove("d-none");
+  }
 
-    function showConfirmApprove(id) {
-        document.getElementById("approve" + id).classList.remove("d-none");
-        document.getElementById("deny" + id).classList.add("d-none");
-    }
+  function showConfirmApprove(id) {
+    document.getElementById("approve" + id).classList.remove("d-none");
+    document.getElementById("deny" + id).classList.add("d-none");
+  }
 
-    function closeConfirmApprove(id) {
-        document.getElementById("approve" + id).classList.add("d-none");
-    }
+  function closeConfirmApprove(id) {
+    document.getElementById("approve" + id).classList.add("d-none");
+  }
 
-    function closeConfirmDeny(id) {
-        document.getElementById("deny" + id).classList.add("d-none");
-    }
+  function closeConfirmDeny(id) {
+    document.getElementById("deny" + id).classList.add("d-none");
+  }
 
-    // Modified from MDN Web Docs
-    function approveApplicationPOST(id) {
-        fetch("/review_applications", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ "id": id, "approve" : 1 })
-        })
-        .then(response => {
-           if (response.ok) {
-               alert(response.status);
-               location.reload();
-           }
-           else {
-              alert("Something went wrong");
-              location.reload();
-           }
-        });
-    }
+  // Modified from MDN Web Docs
+  function approveApplicationPOST(id) {
+    fetch("/review_applications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: id, approve: 1 }),
+    }).then((response) => {
+      if (response.ok) {
+        alert(response.status);
+        location.reload();
+      } else {
+        alert("Something went wrong");
+        location.reload();
+      }
+    });
+  }
 
-    function denyApplicationPOST(id) {
-        fetch("/review_applications", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ "id": id, "approve" : 0 })
-        })
-        .then(response => {
-           if (response.ok) {
-               alert(response.status);
-               location.reload();
-           }
-           else {
-              alert("Something went wrong");
-              location.reload();
-           }
-        });
-    }
+  function denyApplicationPOST(id) {
+    fetch("/review_applications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: id, approve: 0 }),
+    }).then((response) => {
+      if (response.ok) {
+        alert(response.status);
+        location.reload();
+      } else {
+        alert("Something went wrong");
+        location.reload();
+      }
+    });
+  }
 </script>
 {% endblock %}

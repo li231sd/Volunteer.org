@@ -22,11 +22,13 @@
 
     <title>{% block title %}{% endblock %}</title>
   </head>
-  <body>
+  <body class="fade-in">
     <nav class="bg-light border navbar navbar-expand-md navbar-light">
       <div class="container-fluid">
         <!-- The Brand Classes Source: ChatGPT -->
-        <a class="navbar-brand red mb-0 h1" href="/review_applications">VOLUNTEER.ORG STAFF</a>
+        <a class="navbar-brand red mb-0 h1" href="/review_applications"
+          >VOLUNTEER.ORG STAFF</a
+        >
 
         <button
           aria-controls="navbar"
@@ -36,13 +38,23 @@
           data-bs-target="#navbar"
           data-bs-toggle="collapse"
           type="button"
-        ><span class="navbar-toggler-icon"></span></button>
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbar">
           {% if session["staff_id"] %}
           <ul class="navbar-nav me-auto mt-2">
-            <li class="nav-item"><a class="nav-link" href="/review_applications">Approve Applications</a></li>
-            <li class="nav-item"><a class="nav-link" href="/review_self">My Approved Applications</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="/review_applications"
+                >Approve Applications</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/review_self"
+                >My Approved Applications</a
+              >
+            </li>
           </ul>
           <ul class="navbar-nav ms-auto mt-2">
             <li class="nav-item">
@@ -60,16 +72,15 @@
       </div>
     </nav>
 
-    <main class="container py-5 text-center">
-        {% block main %}
-        {% endblock %}
+    <main class="container py-5 text-center slide-up">
+      {% block main %} {% endblock %}
     </main>
 
-    <footer class="text-center ">
-        © 2025 VOLUNTEER.ORG | STAFF
-        <br>
-        <strong>THIS IS A STAFF ONLY SITE</strong>
+    <footer class="text-center">
+      © 2025 VOLUNTEER.ORG | STAFF
+      <br />
+      <strong>THIS IS A STAFF ONLY SITE</strong>
     </footer>
-    <br>
+    <br />
   </body>
 </html>

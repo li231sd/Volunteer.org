@@ -1,183 +1,303 @@
-{% extends "layout.html" %}
-
-{% block title %}
-Register Event
-{% endblock %}
-
-{% block main %}
+{% extends "layout.html" %} {% block title %} Register Event {% endblock %} {%
+block main %}
 <form method="POST" action="/register-event">
+  {% if show == True %}
+  <div
+    class="alert alert-warning alert-dismissible fade show shadow-sm"
+    role="alert"
+  >
+    <strong>⚠️ Attention:</strong> {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endif %}
 
-    {% if show == True %}
-    <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-        <strong>⚠️ Attention:</strong> {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <h1 class="title-main mb-4">Register Event</h1>
+
+  <!-- Organizer Details -->
+  <div class="card shadow-sm mb-4 slide-up">
+    <div class="card-header bg-danger text-white">Organizer Details</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input
+            autocomplete="off"
+            autofocus
+            class="form-control"
+            name="name-organizer"
+            placeholder="Your Name"
+            type="text"
+            required
+          />
+        </div>
+        <div class="col-md-6">
+          <input
+            autocomplete="off"
+            class="form-control"
+            name="email-organizer"
+            placeholder="Your Email"
+            type="email"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="row g-3 mt-3">
+        <div class="col-md-6">
+          <label for="city-organizer" class="form-label">City</label>
+          <input
+            type="text"
+            class="form-control"
+            id="city-organizer"
+            name="city-organizer"
+            placeholder="Your address info"
+            required
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="state-organizer" class="form-label">State</label>
+          <select
+            class="form-select"
+            id="state-organizer"
+            name="state-organizer"
+            required
+          >
+            <option selected disabled value="">Choose...</option>
+            {% for state in states_list %}
+            <option value="{{ state }}">{{ state }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="zip-organizer" class="form-label">Zip</label>
+          <input
+            type="text"
+            class="form-control"
+            id="zip-organizer"
+            name="zip-organizer"
+            required
+          />
+        </div>
+      </div>
     </div>
-    {% endif %}
+  </div>
 
-    <h1 class="title-main mb-4">Register Event</h1>
-
-    <!-- Organizer Details -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-danger text-white">
-            Organizer Details
-        </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <input autocomplete="off" autofocus class="form-control" name="name-organizer"
-                           placeholder="Your Name" type="text" required>
-                </div>
-                <div class="col-md-6">
-                    <input autocomplete="off" class="form-control" name="email-organizer"
-                           placeholder="Your Email" type="email" required>
-                </div>
-            </div>
-
-            <div class="row g-3 mt-3">
-                <div class="col-md-6">
-                    <label for="city-organizer" class="form-label">City</label>
-                    <input type="text" class="form-control" id="city-organizer" name="city-organizer" placeholder="Your address info" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="state-organizer" class="form-label">State</label>
-                    <select class="form-select" id="state-organizer" name="state-organizer" required>
-                        <option selected disabled value="">Choose...</option>
-                        {% for state in states_list %}
-                        <option value="{{ state }}">{{ state }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="zip-organizer" class="form-label">Zip</label>
-                    <input type="text" class="form-control" id="zip-organizer" name="zip-organizer" required>
-                </div>
-            </div>
-        </div>
+  <!-- Organization / Activity Details -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-danger text-white">
+      Organization / Activity Details
     </div>
+    <div class="card-body">
+      <p class="text-muted">
+        <strong>Everything below will be displayed publicly.</strong>
+      </p>
 
-    <!-- Organization / Activity Details -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-danger text-white">
-            Organization / Activity Details
+      <div class="row g-3">
+        <div class="col-md-4">
+          <input
+            autocomplete="off"
+            class="form-control"
+            name="organization-name"
+            placeholder="Organization Name"
+            type="text"
+            required
+          />
         </div>
-        <div class="card-body">
-            <p class="text-muted"><strong>Everything below will be displayed publicly.</strong></p>
-
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <input autocomplete="off" class="form-control" name="organization-name"
-                           placeholder="Organization Name" type="text" required>
-                </div>
-                <div class="col-md-4">
-                    <input autocomplete="off" class="form-control" name="organization-email"
-                           placeholder="Organization Email" type="email" required>
-                </div>
-                <div class="col-md-4">
-                    <input autocomplete="off" class="form-control" name="activity-age"
-                           placeholder="Minimum Age" type="number" min="12" required>
-                </div>
-            </div>
-
-            <div class="row g-3 mt-3">
-                <div class="col-md-6">
-                    <label for="activity-city" class="form-label">City</label>
-                    <input type="text" class="form-control" id="activity-city" name="activity-city" placeholder="Activity address info" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="activity-state" class="form-label">State</label>
-                    <select class="form-select" id="activity-state" name="activity-state" required>
-                        <option selected disabled value="">Choose...</option>
-                        {% for state in states_list %}
-                        <option value="{{ state }}">{{ state }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="activity-zip" class="form-label">Zip</label>
-                    <input type="text" class="form-control" id="activity-zip" name="activity-zip" required>
-                </div>
-            </div>
-
-            <div class="mt-3">
-                <input autocomplete="off" class="form-control" name="max-people"
-                       placeholder="Maximum Participants" type="number" min="1" required>
-            </div>
+        <div class="col-md-4">
+          <input
+            autocomplete="off"
+            class="form-control"
+            name="organization-email"
+            placeholder="Organization Email"
+            type="email"
+            required
+          />
         </div>
+        <div class="col-md-4">
+          <input
+            autocomplete="off"
+            class="form-control"
+            name="activity-age"
+            placeholder="Minimum Age"
+            type="number"
+            min="12"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="row g-3 mt-3">
+        <div class="col-md-6">
+          <label for="activity-city" class="form-label">City</label>
+          <input
+            type="text"
+            class="form-control"
+            id="activity-city"
+            name="activity-city"
+            placeholder="Activity address info"
+            required
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="activity-state" class="form-label">State</label>
+          <select
+            class="form-select"
+            id="activity-state"
+            name="activity-state"
+            required
+          >
+            <option selected disabled value="">Choose...</option>
+            {% for state in states_list %}
+            <option value="{{ state }}">{{ state }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="activity-zip" class="form-label">Zip</label>
+          <input
+            type="text"
+            class="form-control"
+            id="activity-zip"
+            name="activity-zip"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <input
+          autocomplete="off"
+          class="form-control"
+          name="max-people"
+          placeholder="Maximum Participants"
+          type="number"
+          min="1"
+          required
+        />
+      </div>
     </div>
+  </div>
 
-    <!-- Time Details -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-danger text-white">
-            Time Details
+  <!-- Time Details -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-danger text-white">Time Details</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="date-start">Start Date</label>
+          <input
+            id="date-start"
+            class="form-control"
+            name="date-start"
+            type="datetime-local"
+            required
+          />
         </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label" for="date-start">Start Date</label>
-                    <input id="date-start" class="form-control" name="date-start"
-                           type="datetime-local" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label" for="date-end">End Date</label>
-                    <input id="date-end" class="form-control" name="date-end"
-                           type="datetime-local" required>
-                </div>
-            </div>
+        <div class="col-md-6">
+          <label class="form-label" for="date-end">End Date</label>
+          <input
+            id="date-end"
+            class="form-control"
+            name="date-end"
+            type="datetime-local"
+            required
+          />
+        </div>
+      </div>
 
-            <div class="mt-3">
-                <label class="form-label" for="date-reg-deadline">Registration Deadline</label>
-                <input id="date-reg-deadline" class="form-control" name="date-reg-deadline"
-                       type="datetime-local" required>
-            </div>
-        </div>
+      <div class="mt-3">
+        <label class="form-label" for="date-reg-deadline"
+          >Registration Deadline</label
+        >
+        <input
+          id="date-reg-deadline"
+          class="form-control"
+          name="date-reg-deadline"
+          type="datetime-local"
+          required
+        />
+      </div>
     </div>
+  </div>
 
-    <!-- Activity Description -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-danger text-white">
-            Activity Description
-        </div>
-        <div class="card-body">
-            <div class="mb-3">
-                <input autocomplete="off" class="form-control" name="activity-name"
-                       placeholder="Activity Name" type="text" required>
-            </div>
-            <div class="mb-3">
-                <textarea rows="5" class="form-control" name="description"
-                          placeholder="Describe the activity (location, website, what volunteers will do, etc.). This helps get your event approved!"
-                          required></textarea>
-            </div>
-        </div>
+  <!-- Activity Description -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-danger text-white">Activity Description</div>
+    <div class="card-body">
+      <div class="mb-3">
+        <input
+          autocomplete="off"
+          class="form-control"
+          name="activity-name"
+          placeholder="Activity Name"
+          type="text"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <textarea
+          rows="5"
+          class="form-control"
+          name="description"
+          placeholder="Describe the activity (location, website, what volunteers will do, etc.). This helps get your event approved!"
+          required
+        ></textarea>
+      </div>
     </div>
+  </div>
 
-    <!-- Agreement -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-warning text-white">
-            Agreement
-        </div>
-        <div class="card-body">
-            <div class="form-check text-start">
-                <label class="form-check-label">
-                    By submitting this form, I confirm that:
-                    <ul>
-                        <li>I am the official organizer of this activity.</li>
-                        <li>The information I have provided is complete and accurate to the best of my knowledge.</li>
-                        <li>I understand this registration may be rejected if found inaccurate.</li>
-                        <li>I am at least 14 years old.</li>
-                        <li>I have obtained necessary permissions, permits, and insurance (if applicable).</li>
-                        <li>I will comply with all relevant safety, legal, and organizational guidelines.</li>
-                        <li>I accept responsibility for participant safety and conduct.</li>
-                        <li><strong>Volunteer.org reserves the right to provide this information to law enforcement if required.</strong></li>
-                        <li><strong>I UNDERSTAND THAT IT CAN TAKE UP TO 3-5 DAYS FOR APPROVAL</strong></li>
-                    </ul>
-                </label>
-            </div>
-        </div>
+  <!-- Agreement -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-warning text-white">Agreement</div>
+    <div class="card-body">
+      <div class="form-check text-start">
+        <label class="form-check-label">
+          By submitting this form, I confirm that:
+          <ul>
+            <li>I am the official organizer of this activity.</li>
+            <li>
+              The information I have provided is complete and accurate to the
+              best of my knowledge.
+            </li>
+            <li>
+              I understand this registration may be rejected if found
+              inaccurate.
+            </li>
+            <li>I am at least 14 years old.</li>
+            <li>
+              I have obtained necessary permissions, permits, and insurance (if
+              applicable).
+            </li>
+            <li>
+              I will comply with all relevant safety, legal, and organizational
+              guidelines.
+            </li>
+            <li>I accept responsibility for participant safety and conduct.</li>
+            <li>
+              <strong
+                >Volunteer.org reserves the right to provide this information to
+                law enforcement if required.</strong
+              >
+            </li>
+            <li>
+              <strong
+                >I UNDERSTAND THAT IT CAN TAKE UP TO 3-5 DAYS FOR
+                APPROVAL</strong
+              >
+            </li>
+          </ul>
+        </label>
+      </div>
     </div>
+  </div>
 
-    <!-- Submit -->
-    <div class="d-grid">
-        <button class="btn btn-lg btn-danger" type="submit">Send For Review</button>
-    </div>
+  <!-- Submit -->
+  <div class="d-grid">
+    <button class="btn btn-lg btn-danger" type="submit">Send For Review</button>
+  </div>
 </form>
 {% endblock %}
