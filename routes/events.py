@@ -6,6 +6,7 @@ import textwrap
 import smtplib
 from email.mime.text import MIMEText
 from config import Config
+from ai_recommendations import AIRecommender
 
 events_bp = Blueprint('events', __name__)
 
@@ -22,14 +23,34 @@ def index():
     approved_applications = db.execute("SELECT * FROM application_for_review WHERE id IN (SELECT application_id FROM applications_approved) AND date_reg_deadline > ?", (formatted_date,)).fetchall()
 
     for application in approved_applications:
-        options.append([
-            application[16],
-            application[6],
-            textwrap.shorten(application[17], 94, placeholder="..."),
-            application[0]
+        options.append(
+            {
+                "id": application[0],
+                "title": application[16],
+                "description": application[17],
+            }
+        )
+
+    user_info = db.execute("SELECT * FROM ai_setup_info WHERE user_id = ?", (session["user_id"],)).fetchall()
+    if not user_info:
+        return redirect("/ai_rec_sys_model_volunteer_org_4")
+
+    recommender = AIRecommender(options)
+    user_input = f"I like to {user_info[0][1]}. I have skills in {user_info[0][2]}."
+    recommendations = recommender.recommend(user_input)
+
+    final_options = []
+
+    for rec in recommendations:
+        db_output = db.execute("SELECT * FROM application_for_review WHERE id = ?", (rec["id"],)).fetchone()
+        final_options.append([
+            db_output[16],
+            db_output[6],
+            textwrap.shorten(db_output[17], 94, placeholder="..."),
+            db_output[0]
         ])
 
-    return render_template("index.html", options=options)
+    return render_template("index.html", options=final_options)
 
 @events_bp.route("/find_more", methods=["GET"])
 def find_more():

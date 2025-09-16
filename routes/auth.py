@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, render_template, request, session, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
@@ -68,10 +69,33 @@ def register():
 
         session["user_id"] = id_finder[0][0]
 
-        return redirect("/")
+        return redirect("/ai_rec_sys_model_volunteer_org_4")
 
     else:
         return render_template("register.html", message="If you can see this that means I did something wrong!",
+                               show=False)
+
+@auth_bp.route("/ai_rec_sys_model_volunteer_org_4", methods=["GET", "POST"])
+def ai_rec_sys_model_volunteer_org_4():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        like_to_do = request.form.get("like_to_do")
+        skills = request.form.get("skills")
+
+        if not like_to_do or not skills:
+            return render_template("ai_recommender.html", message="One or more fields were left blank! We need this info to give good results.", show=True)
+        
+        db.execute(
+            "INSERT INTO ai_setup_info ('user_id', 'like_to_do', 'skills') VALUES (?, ?, ?)",
+            (session["user_id"], like_to_do, skills)
+        )
+
+        return redirect("/")
+    
+    else:
+        return render_template("ai_recommender.html", message="If you can see this that means I did something wrong!",
                                show=False)
 
 @auth_bp.route("/logout", methods=["GET"])

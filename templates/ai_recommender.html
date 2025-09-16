@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+AI Setup
+{% endblock %}
+
+{% block main %}
+  {% if show == True %}
+    <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+      <strong>Uh oh!</strong> {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+  {% endif %}
+
+  <div class="row justify-content-center my-5">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-5">
+          <h2 class="mb-4 text-center fw-bold text-danger">
+            Set Up Your Recommendation System
+          </h2>
+          <p class="text-muted text-center mb-4">
+            Tell us a bit about your interests and skills so we can match you with the best opportunities.
+          </p>
+          <form action="/ai_rec_sys_model_volunteer_org_4" method="post">
+            <div class="mb-3">
+              <label for="like_to_do" class="form-label fw-semibold">What do you like to do?</label>
+              <textarea
+                class="form-control"
+                name="like_to_do"
+                placeholder="Examples: I like planes, I like hiking."
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="skills" class="form-label fw-semibold">What skills do you have?</label>
+              <textarea
+                class="form-control"
+                name="skills"
+                placeholder="Examples: I’m good at tutoring, I’m good at planning events."
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <button class="btn btn-danger w-100 fw-semibold py-2" type="submit">
+              <i class="bi bi-search"></i> Look for Opportunities
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
