@@ -47,7 +47,7 @@ def index():
             db_output[16],
             db_output[6],
             textwrap.shorten(db_output[17], 94, placeholder="..."),
-            db_output[0]
+            round(rec["score"], 1)
         ])
 
     return render_template("index.html", options=final_options)

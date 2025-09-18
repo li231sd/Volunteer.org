@@ -8,8 +8,8 @@ class AIRecommender:
 
         texts = []
         for opp in opportunities:
-            title = opp[0].get("title", "")
-            description = opp[0].get("description", "")
+            title = opp.get("title", "")
+            description = opp.get("description", "")
             combined = (title + " " + description).strip()
             if combined:  # only add non-empty strings
                 texts.append(combined)
@@ -20,7 +20,7 @@ class AIRecommender:
             self.opportunities_embeddings = None
 
     def recommend(self, user_input, top_k=3):
-        if not self.opportunities_embeddings:
+        if self.opportunities_embeddings is None:
             return []  # nothing to recommend
 
         user_embed = self.embed([user_input])
@@ -33,7 +33,7 @@ class AIRecommender:
         for i in top_indices.numpy():
             opp = self.opportunities[i]
             recs.append({
-                "id": opp[0]["id"],
+                "id": opp["id"],
                 "score": float(scores[0][i]),
             })
         return recs
